@@ -14,10 +14,11 @@ export class VpcStack extends cdk.Stack {
     this.vpc = new Vpc(this, 'Vpc', {
       ipAddresses: IpAddresses.cidr(props.cidr),
       availabilityZones: ['ap-northeast-1a', 'ap-northeast-1c'],
+      natGateways: 0,
       subnetConfiguration: [
         {
           cidrMask: 24,
-          name: 'Private',
+          name: 'Isolated',
           subnetType: SubnetType.PRIVATE_ISOLATED,
         },
       ],
