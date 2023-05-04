@@ -2,11 +2,11 @@ import * as cdk from 'aws-cdk-lib';
 import {Construct} from 'constructs';
 import {Vpc} from 'aws-cdk-lib/aws-ec2';
 import {ApplicationLoadBalancer} from 'aws-cdk-lib/aws-elasticloadbalancingv2';
-import {Ec2Service} from "aws-cdk-lib/aws-ecs";
+import {FargateService} from "aws-cdk-lib/aws-ecs";
 
 interface ApplicationLoadBalancerStackProps extends cdk.StackProps {
   vpc: Vpc,
-  service: Ec2Service
+  service: FargateService
 }
 
 export class ApplicationLoadBalancerStack extends cdk.Stack {

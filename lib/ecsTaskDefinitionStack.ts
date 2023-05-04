@@ -1,8 +1,16 @@
 import * as cdk from 'aws-cdk-lib';
 import {Construct} from 'constructs';
-import {TaskDefinition, ContainerDefinition, ContainerImage, Protocol, Compatibility} from "aws-cdk-lib/aws-ecs";
+import {Repository} from "aws-cdk-lib/aws-ecr";
+import {
+  TaskDefinition,
+  ContainerDefinition,
+  ContainerImage,
+  Compatibility
+} from "aws-cdk-lib/aws-ecs";
 
-interface EcsTaskDefinitionStackProps extends cdk.StackProps {}
+interface EcsTaskDefinitionStackProps extends cdk.StackProps {
+  repoName: string
+}
 
 export class EcsTaskDefinitionStack extends cdk.Stack {
   public readonly taskDefinition: TaskDefinition
@@ -15,8 +23,10 @@ export class EcsTaskDefinitionStack extends cdk.Stack {
       cpu: '256',
       memoryMiB: '512',
     });
+
+    const repository = Repository.fromRepositoryName(this, 'repo', props.repoName);
     this.container = this.taskDefinition.addContainer('web', {
-      image: ContainerImage.fromRegistry('public.ecr.aws/ecs-sample-image/amazon-ecs-sample:latest'),
+      image: ContainerImage.fromEcrRepository(repository),
     });
 
     // this.container.addPortMappings({

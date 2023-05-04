@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {getConfig} from "../config";
 import * as cdk from 'aws-cdk-lib'
+import {EcrRepositoryStack} from "../lib/ecrRepositoryStack";
 import {VpcStack} from '../lib/vpcStack';
 import {EcsClusterStack} from "../lib/ecsClusterStack";
 import {EcsTaskDefinitionStack} from "../lib/ecsTaskDefinitionStack";
@@ -25,11 +26,17 @@ new VpcEndpointStack(app, productName + 'VpcEndpointStack', {
   vpc: vpcStack.vpc
 })
 
-// ecs
+// ecs cluster
 const ecsClusterStack = new EcsClusterStack(app, productName + 'EcsClusterStack', {
   vpc: vpcStack.vpc
 })
-const ecsTaskDefinitionStack = new EcsTaskDefinitionStack(app, productName + 'EcsTaskDefinitionStack', {})
+
+// ecs task
+const ecsTaskDefinitionStack = new EcsTaskDefinitionStack(app, productName + 'EcsTaskDefinitionStack', {
+  repoName: "fight-migration",
+})
+
+// ecs service
 const ecsServiceA = new EcsServiceStack(app, productName + 'EcsServiceStackA', {
   cluster: ecsClusterStack.cluster,
   taskDefinition: ecsTaskDefinitionStack.taskDefinition,
