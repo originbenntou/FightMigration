@@ -1,13 +1,15 @@
 {
   "name": "fight_migration",
   "version": "0.1.0",
+  "license": "private",
   "bin": {
     "fight-migration": "bin/index.ts"
   },
   "scripts": {
     "test": "jest",
-    "cdk:dev": "cdk deploy -c env=dev",
-    "cdk:prd": "cdk deploy -c env=prd"
+    "cdk:dev": "cdk deploy --all -c env=dev",
+    "cdk:prd": "cdk deploy --all -c env=prd",
+    "cdk:destroy": "cdk destroy --all -c env=dev"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",

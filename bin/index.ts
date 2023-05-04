@@ -1,7 +1,11 @@
 #!/usr/bin/env node
+import {getConfig} from "../config";
 import * as cdk from 'aws-cdk-lib'
-import { getConfig } from "../config";
-import { VpcStack } from '../lib/vpcStack';
+import {VpcStack} from '../lib/vpcStack';
+import {EcsClusterStack} from "../lib/ecsClusterStack";
+import {EcsTaskDefinitionStack} from "../lib/ecsTaskDefinitionStack";
+import {EcsServiceStack} from "../lib/ecsServiceStack";
+import {ApplicationLoadBalancerStack} from "../lib/applicationLoadBalancerStack";
 
 const app = new cdk.App();
 
@@ -10,50 +14,37 @@ const env = app.node.tryGetContext('env');
 
 const config = getConfig(env);
 
-const _ = new VpcStack(app, productName + 'VpcStack', {
+// network
+const vpcStack = new VpcStack(app, productName + 'VpcStack', {
   cidr: config.Vpc.Cidr
 })
 
-// const cluster = new ecs.Cluster(stack, 'EcsCluster', { vpc });
-// cluster.addCapacity('DefaultAutoScalingGroup', {
-//   instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO)
-// });
-//
-// const taskDefinition = new ecs.Ec2TaskDefinition(stack, 'TaskDef');
-// const container = taskDefinition.addContainer('web', {
-//   image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample"),
-//   memoryLimitMiB: 256,
-// });
-//
-// container.addPortMappings({
-//   containerPort: 80,
-//   hostPort: 8080,
-//   protocol: ecs.Protocol.TCP
-// });
-//
-// const service = new ecs.Ec2Service(stack, "Service", {
-//   cluster,
-//   taskDefinition,
-// });
+// ecs
+const ecsClusterStack = new EcsClusterStack(app, productName + 'EcsClusterStack', {
+  vpc: vpcStack.vpc
+})
+const ecsTaskDefinitionStack = new EcsTaskDefinitionStack(app, productName + 'EcsTaskDefinitionStack', {})
+const ecsServiceA = new EcsServiceStack(app, productName + 'EcsServiceStackA', {
+  cluster: ecsClusterStack.cluster,
+  taskDefinition: ecsTaskDefinitionStack.taskDefinition,
+})
 
-// const lb = new elbv2.ApplicationLoadBalancer(stack, 'LB', {
-//   vpc,
-//   internetFacing: true
-// });
-// const listener = lb.addListener('PublicListener', { port: 80, open: true });
-//
-// listener.addTargets('ECS', {
-//   port: 8080,
-//   targets: [service.loadBalancerTarget({
-//     containerName: 'web',
-//     containerPort: 80
-//   })],
-//   healthCheck: {
-//     interval: cdk.Duration.seconds(60),
-//     path: "/health",
-//     timeout: cdk.Duration.seconds(5),
-//   }
-// });
-// new cdk.CfnOutput(stack, 'LoadBalancerDNS', { value: lb.loadBalancerDnsName, });
+// alb
+const applicationLoadBalancerStack = new ApplicationLoadBalancerStack(
+  app,
+  productName + 'ApplicationLoadBalancerStack',
+  {
+    vpc: vpcStack.vpc,
+    service: ecsServiceA.service
+  }
+);
+
+new cdk.CfnOutput(
+  applicationLoadBalancerStack,
+  'LoadBalancerDNS',
+  {
+    value: applicationLoadBalancerStack.lb.loadBalancerDnsName
+  }
+);
 
 app.synth();
