@@ -5,10 +5,9 @@
     "fight-migration": "bin/index.ts"
   },
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk:dev": "cdk deploy -c env=dev",
+    "cdk:prd": "cdk deploy -c env=prd"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",

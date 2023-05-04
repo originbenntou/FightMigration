@@ -1,13 +1,8 @@
 import { DevConfig } from './dev';
 import { PrdConfig } from './prd';
+import { EnvType } from "../types/config";
 
-const EnvType = {
-  DEV: 'dev',
-  PRD: 'prd',
-} as const;
-type EnvType = typeof EnvType[keyof typeof EnvType];
-
-export const getConfig = (env: EnvType): Config => {
+export const getConfig = (env: EnvType) => {
   let config;
 
   switch (env) {

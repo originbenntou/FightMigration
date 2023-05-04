@@ -10,7 +10,7 @@ export class VpcStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: VpcStackProps) {
     super(scope, id, props)
 
-    const vpc = new Vpc(this, 'Vpc', {
+    const _ = new Vpc(this, 'Vpc', {
       ipAddresses: IpAddresses.cidr(props.cidr),
       availabilityZones: ['ap-northeast-1a', 'ap-northeast-1c'],
       subnetConfiguration: [

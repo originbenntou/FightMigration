@@ -10,7 +10,7 @@ const env = app.node.tryGetContext('env');
 
 const config = getConfig(env);
 
-const vpcStack = new VpcStack(app, productName + 'VpcStack', {
+const _ = new VpcStack(app, productName + 'VpcStack', {
   cidr: config.Vpc.Cidr
 })
 
