@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
+import {Duration} from "aws-cdk-lib";
 import {Construct} from 'constructs';
 import {Vpc} from 'aws-cdk-lib/aws-ec2';
 import {ApplicationLoadBalancer} from 'aws-cdk-lib/aws-elasticloadbalancingv2';
@@ -20,12 +21,12 @@ export class ApplicationLoadBalancerStack extends cdk.Stack {
     });
 
     const listener = this.lb.addListener('PublicListener', {
-      port: 8080,
+      port: 80,
       open: true,
     })
 
     listener.addTargets('Ecs', {
-      port: 8080,
+      port: 80,
       targets: [props.service.loadBalancerTarget({
         containerName: 'web',
         containerPort: 80
@@ -33,9 +34,14 @@ export class ApplicationLoadBalancerStack extends cdk.Stack {
       // include health check (default is none)
       healthCheck: {
         interval: cdk.Duration.seconds(60),
-        path: "/health",
+        path: "/",
         timeout: cdk.Duration.seconds(5),
-      }
-    })
+        healthyThresholdCount: 2,
+        unhealthyThresholdCount: 2,
+      },
+      deregistrationDelay: Duration.seconds(0)
+    });
+
+
   }
 }
