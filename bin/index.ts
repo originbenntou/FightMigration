@@ -42,22 +42,22 @@ const ecsServiceA = new EcsServiceStack(app, productName + 'EcsServiceStackA', {
   taskDefinition: ecsTaskDefinitionStack.taskDefinition,
 })
 
-// // alb
-// const applicationLoadBalancerStack = new ApplicationLoadBalancerStack(
-//   app,
-//   productName + 'ApplicationLoadBalancerStack',
-//   {
-//     vpc: vpcStack.vpc,
-//     service: ecsServiceA.service
-//   }
-// );
-//
-// new cdk.CfnOutput(
-//   applicationLoadBalancerStack,
-//   'LoadBalancerDNS',
-//   {
-//     value: applicationLoadBalancerStack.lb.loadBalancerDnsName
-//   }
-// );
+// alb
+const applicationLoadBalancerStack = new ApplicationLoadBalancerStack(
+  app,
+  productName + 'ApplicationLoadBalancerStack',
+  {
+    vpc: vpcStack.vpc,
+    service: ecsServiceA.service
+  }
+);
+
+new cdk.CfnOutput(
+  applicationLoadBalancerStack,
+  'LoadBalancerDNS',
+  {
+    value: applicationLoadBalancerStack.lb.loadBalancerDnsName
+  }
+);
 
 app.synth();

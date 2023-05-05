@@ -1,12 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import {Construct} from 'constructs';
 import {Repository} from "aws-cdk-lib/aws-ecr";
-import {
-  TaskDefinition,
-  ContainerDefinition,
-  ContainerImage,
-  Compatibility
-} from "aws-cdk-lib/aws-ecs";
+import {TaskDefinition, ContainerDefinition, ContainerImage, Compatibility, Protocol} from "aws-cdk-lib/aws-ecs";
 
 interface EcsTaskDefinitionStackProps extends cdk.StackProps {
   repoName: string
@@ -29,10 +24,10 @@ export class EcsTaskDefinitionStack extends cdk.Stack {
       image: ContainerImage.fromEcrRepository(repository),
     });
 
-    // this.container.addPortMappings({
-    //   containerPort: 80,
-    //   hostPort: 8080,
-    //   protocol: Protocol.TCP
-    // })
+    this.container.addPortMappings({
+      containerPort: 80,
+      hostPort: 80,
+      protocol: Protocol.TCP
+    })
   }
 }

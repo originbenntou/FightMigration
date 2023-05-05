@@ -7,7 +7,7 @@
   },
   "scripts": {
     "test": "jest",
-    "cdk:dev": "cdk deploy -y --all -c env=dev",
+    "cdk:dev": "cdk deploy --require-approval never --all -c env=dev",
     "cdk:prd": "cdk deploy --all -c env=prd",
     "cdk:destroy": "cdk destroy --all -c env=dev"
   },
