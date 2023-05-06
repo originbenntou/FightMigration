@@ -8,11 +8,16 @@ import {EcsTaskDefinitionStack} from "../lib/ecsTaskDefinitionStack";
 import {EcsServiceStack} from "../lib/ecsServiceStack";
 import {ApplicationLoadBalancerStack} from "../lib/applicationLoadBalancerStack";
 import {VpcEndpointStack} from "../lib/vpcEndpointStack";
+import {Route53Stack} from "../lib/route53Stack";
 
 const app = new cdk.App();
 
 const productName = app.node.tryGetContext('productName');
 const env = app.node.tryGetContext('env');
+
+const acmArn = app.node.tryGetContext('acmArn');
+const customDomain = app.node.tryGetContext('customDomain');
+const hostedZoneId = app.node.tryGetContext('hostedZoneId');
 
 const config = getConfig(env);
 
@@ -48,15 +53,23 @@ const applicationLoadBalancerStack = new ApplicationLoadBalancerStack(
   productName + 'ApplicationLoadBalancerStack',
   {
     vpc: vpcStack.vpc,
-    service: ecsServiceA.service
+    service: ecsServiceA.service,
+    acm: acmArn,
   }
 );
 
+// route53
+const route53Stack = new Route53Stack(app, productName + 'Route53Stack', {
+  customDomain,
+  hostedZoneId,
+  alb: applicationLoadBalancerStack.lb
+})
+
 new cdk.CfnOutput(
-  applicationLoadBalancerStack,
-  'LoadBalancerDNS',
+  route53Stack,
+  'DNS',
   {
-    value: applicationLoadBalancerStack.lb.loadBalancerDnsName
+    value: route53Stack.route53ARecord.domainName
   }
 );
 
