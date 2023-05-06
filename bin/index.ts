@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import {getConfig} from "../config";
 import * as cdk from 'aws-cdk-lib'
-import {EcrRepositoryStack} from "../lib/ecrRepositoryStack";
 import {VpcStack} from '../lib/vpcStack';
 import {EcsClusterStack} from "../lib/ecsClusterStack";
 import {EcsTaskDefinitionStack} from "../lib/ecsTaskDefinitionStack";
@@ -13,17 +12,18 @@ import {Route53Stack} from "../lib/route53Stack";
 const app = new cdk.App();
 
 const productName = app.node.tryGetContext('productName');
-const env = app.node.tryGetContext('env');
+const repoName = app.node.tryGetContext('repoName');
 
-const acmArn = app.node.tryGetContext('acmArn');
-const customDomain = app.node.tryGetContext('customDomain');
-const hostedZoneId = app.node.tryGetContext('hostedZoneId');
+const env = app.node.tryGetContext('env');
 
 const config = getConfig(env);
 
+const cidr = config.vpc.cidr;
+const customDomain = config.route53.customDomain;
+
 // network
 const vpcStack = new VpcStack(app, productName + 'VpcStack', {
-  cidr: config.Vpc.Cidr
+  cidr
 })
 
 // vpc endpoint
@@ -38,7 +38,7 @@ const ecsClusterStack = new EcsClusterStack(app, productName + 'EcsClusterStack'
 
 // ecs task
 const ecsTaskDefinitionStack = new EcsTaskDefinitionStack(app, productName + 'EcsTaskDefinitionStack', {
-  repoName: "fight-migration",
+  repoName,
 })
 
 // ecs service
@@ -54,14 +54,12 @@ const applicationLoadBalancerStack = new ApplicationLoadBalancerStack(
   {
     vpc: vpcStack.vpc,
     service: ecsServiceA.service,
-    acm: acmArn,
   }
 );
 
 // route53
 const route53Stack = new Route53Stack(app, productName + 'Route53Stack', {
   customDomain,
-  hostedZoneId,
   alb: applicationLoadBalancerStack.lb
 })
 

@@ -8,7 +8,6 @@
   "scripts": {
     "test": "jest",
     "cdk:dev": "cdk deploy --require-approval never --all -c env=dev",
-    "cdk:prd": "cdk deploy --all -c env=prd",
     "cdk:destroy": "cdk destroy --all -c env=dev"
   },
   "devDependencies": {
@@ -31,6 +30,7 @@
     "typescript": "~4.9.5"
   },
   "dependencies": {
+    "@aws-cdk/aws-ssm": "^1.200.0",
     "aws-cdk-lib": "2.70.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21"

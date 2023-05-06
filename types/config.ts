@@ -5,9 +5,12 @@ const EnvType = {
 export type EnvType = typeof EnvType[keyof typeof EnvType];
 
 export type Config = {
-  Vpc: {
-    Cidr: string;
-  };
+  vpc: {
+    cidr: string
+  },
+  route53: {
+    customDomain: string
+  }
 };
 
 export interface IConfig {
