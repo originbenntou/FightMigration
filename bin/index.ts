@@ -12,14 +12,16 @@ import {Route53Stack} from "../lib/route53Stack";
 const app = new cdk.App();
 
 const productName = app.node.tryGetContext('productName');
-const repoName = app.node.tryGetContext('repoName');
+const repoV1Name = app.node.tryGetContext('repoV1Name');
+// const repoV2Name = app.node.tryGetContext('repoV2Name');
 
 const env = app.node.tryGetContext('env');
 
 const config = getConfig(env);
 
 const cidr = config.vpc.cidr;
-const customDomain = config.route53.customDomain;
+const customDomainV1 = config.route53.customDomainV1;
+const customDomainV2 = config.route53.customDomainV2;
 
 // network
 const vpcStack = new VpcStack(app, productName + 'VpcStack', {
@@ -38,7 +40,7 @@ const ecsClusterStack = new EcsClusterStack(app, productName + 'EcsClusterStack'
 
 // ecs task
 const ecsTaskDefinitionStack = new EcsTaskDefinitionStack(app, productName + 'EcsTaskDefinitionStack', {
-  repoName,
+  repoName: repoV1Name,
 })
 
 // ecs service
@@ -59,7 +61,7 @@ const applicationLoadBalancerStack = new ApplicationLoadBalancerStack(
 
 // route53
 const route53Stack = new Route53Stack(app, productName + 'Route53Stack', {
-  customDomain,
+  customDomain: customDomainV1,
   alb: applicationLoadBalancerStack.lb
 })
 

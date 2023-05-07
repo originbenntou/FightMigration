@@ -9,7 +9,8 @@ export type Config = {
     cidr: string
   },
   route53: {
-    customDomain: string
+    customDomainV1: string
+    customDomainV2: string
   }
 };
 

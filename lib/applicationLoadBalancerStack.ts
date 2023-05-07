@@ -28,7 +28,7 @@ export class ApplicationLoadBalancerStack extends cdk.Stack {
       protocol: ApplicationProtocol.HTTP,
       port: 80,
       targets: [
-        props.service.loadBalancerTarget({containerName: 'web', containerPort: 80}),
+        props.service.loadBalancerTarget({containerName: 'app', containerPort: 80}),
       ],
       healthCheck: {
         interval: cdk.Duration.seconds(30),

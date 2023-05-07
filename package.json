@@ -7,8 +7,8 @@
   },
   "scripts": {
     "test": "jest",
-    "cdk:dev": "cdk deploy --require-approval never --all -c env=dev",
-    "cdk:destroy": "cdk destroy --all -c env=dev"
+    "dev": "cdk deploy --require-approval never --all -c env=dev",
+    "rm": "cdk destroy --all -c env=dev"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",

@@ -1,5 +1,5 @@
 import { DevConfig } from './dev';
-import { EnvType } from "../types/config";
+import { EnvType } from "./types";
 
 export const getConfig = (env: EnvType) => {
   let config;
