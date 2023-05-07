@@ -87,4 +87,5 @@ new cdk.CfnOutput(
 );
 
 // 一旦完成ということで！
+// FargateSpotにしたい、もしくはEC2にしたいなーー
 app.synth();
