@@ -21,19 +21,21 @@ export class EcsTaskDefinitionStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: EcsTaskDefinitionStackProps) {
     super(scope, id, props)
 
+    // task
     this.taskDefinition = new TaskDefinition(this, 'TaskDefinition', {
       compatibility: Compatibility.FARGATE,
       cpu: '256',
       memoryMiB: '512',
     });
 
+    // container
     const repository = Repository.fromRepositoryName(this, 'repo', props.repoName);
     this.container = this.taskDefinition.addContainer('app', {
       image: ContainerImage.fromEcrRepository(repository),
       logging: new AwsLogDriver({
-        streamPrefix: 'fight-migration-prefix',
+        streamPrefix: `${props.repoName}`,
         logGroup: new logs.LogGroup(this, 'LogGroup', {
-          logGroupName: '/aws/ecs/fight-migration-log-group',
+          logGroupName: `/aws/ecs/${props.repoName}-log-group`,
           retention: logs.RetentionDays.ONE_WEEK,
           removalPolicy: cdk.RemovalPolicy.DESTROY
         })

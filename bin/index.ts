@@ -12,16 +12,15 @@ import {Route53Stack} from "../lib/route53Stack";
 const app = new cdk.App();
 
 const productName = app.node.tryGetContext('productName');
-const repoV1Name = app.node.tryGetContext('repoNameV1');
-const repoV2Name = app.node.tryGetContext('repoNameV2');
+const repoNameV1 = app.node.tryGetContext('repoNameV1');
+const repoNameV2 = app.node.tryGetContext('repoNameV2');
 
 const env = app.node.tryGetContext('env');
 
 const config = getConfig(env);
 
 const cidr = config.vpc.cidr;
-const customDomainV1 = config.route53.customDomainV1;
-const customDomainV2 = config.route53.customDomainV2;
+const customDomain = config.route53.customDomain;
 
 // network
 const vpcStack = new VpcStack(app, productName + 'VpcStack', {
@@ -38,15 +37,28 @@ const ecsClusterStack = new EcsClusterStack(app, productName + 'EcsClusterStack'
   vpc: vpcStack.vpc
 })
 
-// ecs task
-const ecsTaskDefinitionStack = new EcsTaskDefinitionStack(app, productName + 'EcsTaskDefinitionStack', {
-  repoName: repoV1Name,
+// ecs task v1
+const ecsTaskDefinitionStackV1 = new EcsTaskDefinitionStack(app, productName + 'EcsTaskDefinitionStackV1', {
+  repoName: repoNameV1,
 })
 
-// ecs service
-const ecsServiceA = new EcsServiceStack(app, productName + 'EcsServiceStackA', {
+// ecs service v1
+const ecsServiceStackV1 = new EcsServiceStack(app, productName + 'EcsServiceStackV1', {
+  repoName: repoNameV1,
   cluster: ecsClusterStack.cluster,
-  taskDefinition: ecsTaskDefinitionStack.taskDefinition,
+  taskDefinition: ecsTaskDefinitionStackV1.taskDefinition,
+})
+
+// ecs task v2
+const ecsTaskDefinitionStackV2 = new EcsTaskDefinitionStack(app, productName + 'EcsTaskDefinitionStackV2', {
+  repoName: repoNameV2,
+})
+
+// ecs service v2
+const ecsServiceStackV2 = new EcsServiceStack(app, productName + 'EcsServiceStackV2', {
+  repoName: repoNameV2,
+  cluster: ecsClusterStack.cluster,
+  taskDefinition: ecsTaskDefinitionStackV2.taskDefinition,
 })
 
 // alb
@@ -55,13 +67,14 @@ const applicationLoadBalancerStack = new ApplicationLoadBalancerStack(
   productName + 'ApplicationLoadBalancerStack',
   {
     vpc: vpcStack.vpc,
-    service: ecsServiceA.service,
+    serviceV1: ecsServiceStackV1.service,
+    serviceV2: ecsServiceStackV2.service,
   }
 );
 
 // route53
 const route53Stack = new Route53Stack(app, productName + 'Route53Stack', {
-  customDomain: customDomainV1,
+  customDomain: customDomain,
   alb: applicationLoadBalancerStack.lb
 })
 

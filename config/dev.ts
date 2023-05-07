@@ -7,8 +7,7 @@ export class DevConfig implements IConfig {
         cidr: "10.10.0.0/16",
       },
       route53: {
-        customDomainV1: "fmv1-dev.mototsuka.com",
-        customDomainV2: "fmv2-dev.mototsuka.com"
+        customDomain: "fmdev.mototsuka.com",
       },
     };
   }
