@@ -7,8 +7,11 @@ const app = new cdk.App();
 const productName = app.node.tryGetContext('productName');
 
 // ecr repository
-new EcrRepositoryStack(app, productName + 'EcrRepositoryStack', {
-  repoName: 'fight-migration'
+new EcrRepositoryStack(app, productName + 'EcrRepositoryV1Stack', {
+  repoName: 'fight-migration-v1'
+});
+new EcrRepositoryStack(app, productName + 'EcrRepositoryV2Stack', {
+  repoName: 'fight-migration-v2'
 });
 
 app.synth();
