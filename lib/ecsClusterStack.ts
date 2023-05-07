@@ -15,9 +15,5 @@ export class EcsClusterStack extends cdk.Stack {
     this.cluster = new Cluster(this, 'Cluster', {
       vpc: props.vpc
     });
-
-    this.cluster.addCapacity('DefaultAutoScalingGroup', {
-      instanceType: InstanceType.of(InstanceClass.T2, InstanceSize.MICRO)
-    });
   }
 }
