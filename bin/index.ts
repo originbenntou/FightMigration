@@ -86,4 +86,5 @@ new cdk.CfnOutput(
   }
 );
 
+// 一旦完成ということで！
 app.synth();
