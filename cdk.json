@@ -18,8 +18,8 @@
   },
   "context": {
     "productName": "FightMigration",
-    "repoV1Name": "fight-migration-v1",
-    "repoV2Name": "fight-migration-v2",
+    "repoNameV1": "fight-migration-v1",
+    "repoNameV2": "fight-migration-v2",
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,
     "@aws-cdk/core:target-partitions": [

@@ -12,8 +12,8 @@ import {Route53Stack} from "../lib/route53Stack";
 const app = new cdk.App();
 
 const productName = app.node.tryGetContext('productName');
-const repoV1Name = app.node.tryGetContext('repoV1Name');
-// const repoV2Name = app.node.tryGetContext('repoV2Name');
+const repoV1Name = app.node.tryGetContext('repoNameV1');
+const repoV2Name = app.node.tryGetContext('repoNameV2');
 
 const env = app.node.tryGetContext('env');
 
