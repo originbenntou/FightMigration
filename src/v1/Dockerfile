@@ -14,5 +14,5 @@ ADD nuxt.config.js ./
 COPY --from=builder ./app/node_modules ./node_modules/
 COPY --from=builder ./app/.nuxt ./.nuxt/
 COPY --from=builder ./app/static ./static/
-EXPOSE 3000
-ENTRYPOINT ["yarn", "start"]
+EXPOSE 80
+ENTRYPOINT ["yarn", "start", "-p", "80"]

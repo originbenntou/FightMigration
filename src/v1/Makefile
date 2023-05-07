@@ -10,7 +10,7 @@ PWD:=$(shell pwd)
 
 .PHONY: $(shell egrep -o ^[a-zA-Z_-]+: $(MAKEFILE_LIST) | sed 's/://')
 build:
-	docker build -t $(AWS_REPOSITORY) .
+	docker build -t $(AWS_REPOSITORY) . --platform=linux/amd64
 
 tag:
 	echo $(TAG)
@@ -25,4 +25,4 @@ push:
 	docker push $(AWS_ACCOUNT).dkr.ecr.$(AWS_REGION).amazonaws.com/$(AWS_REPOSITORY):latest
 
 run:
-	docker run $(AWS_ACCOUNT).dkr.ecr.$(AWS_REGION).amazonaws.com/$(AWS_REPOSITORY):$(TAG)
+	docker run -it $(AWS_ACCOUNT).dkr.ecr.$(AWS_REGION).amazonaws.com/$(AWS_REPOSITORY):$(TAG)
